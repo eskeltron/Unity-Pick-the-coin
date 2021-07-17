@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts
 {
-    class ActivePlayer : MonoBehaviour
+    public abstract class ActivePlayer : MonoBehaviour, ISoldier
     {
         public AudioClip JumpSound;
         public AudioClip DeadSound;
@@ -11,19 +11,39 @@ namespace Assets.Scripts
         public float Speed;
         public float JumpForce;
 
-        private Rigidbody2D Rigidbody2D;
-        private Animator Animator;
-        private float Horizontal;
-        private bool Grounded;
-        private float LastShoot;
-        private float LastWalk;
-        private int Health = 5;
-
-        // Start is called before the first frame update
-        void Start()
+        protected Rigidbody2D Rigidbody2D;
+        protected Animator Animator;
+        protected SpriteRenderer spriteRenderer;
+        protected float Horizontal;
+        protected bool Grounded;
+        protected float LastShoot;
+        protected float LastWalk;
+        protected int Health;
+        protected Vector2 direction;
+        public virtual void ShootManage()
         {
-            Rigidbody2D = GetComponent<Rigidbody2D>();
-            Animator = GetComponent<Animator>();
+            GameObject bullet = Instantiate(BulletPrefab, transform.position + new Vector3(direction.x, direction.y, 0) * 0.15f, Quaternion.identity);
+            bullet.GetComponent<BulletScript>().SetDirection(direction);
+        }
+
+        public virtual void HitManage()
+        {
+            --Health;
+            if (Health == 0)
+            {
+                DeathPlayer();
+            }
+        }
+
+        public virtual void DeathPlayer()
+        {
+            Animator.SetBool("isDead", true);
+            Camera.main.GetComponent<AudioSource>().PlayOneShot(DeadSound);
+        }
+
+        public virtual void DestroyPlayer()
+        {
+            Destroy(gameObject);
         }
     }
 }

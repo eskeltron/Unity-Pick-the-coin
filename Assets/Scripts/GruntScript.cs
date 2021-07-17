@@ -1,55 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 
-public class GruntScript : MonoBehaviour
+public class GruntScript : ActivePlayer
 {
     public GameObject John;
-    public GameObject BulletPrefab;
-    public AudioClip DeadSound;
-
-    private Animator Animator;
-    private float LastShoot;
-    private int Health = 3;
+    public GameObject EnemiesUI;
     // Start is called before the first frame update
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         Animator = GetComponent<Animator>();
+        Health = 3;
+        EnemiesUI = GameObject.Find("EnemiesUI");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (John == null) return;
+        if (John == null || Health == 0) return;
 
-        Vector3 direction = John.transform.position - transform.position;
-        transform.localScale = new Vector3(direction.x > 0 ? 1.0f : -1.0f, 1.0f, 1.0f);
+        Vector3 johnDistance = John.transform.position - transform.position;
 
-        float distance = Mathf.Abs(John.transform.position.x - transform.position.x);
-        if (distance < 1.0f && Time.time > LastShoot + 0.45f && Health > 0)
+        direction = johnDistance.x > 0 ? Vector2.right : Vector2.left;
+        spriteRenderer.flipX = direction == Vector2.right;
+
+        float distanceToJohn = Mathf.Abs(johnDistance.x);
+
+        if (distanceToJohn < 1.0f && Time.time > LastShoot + 0.45f && Health > 0)
         {
-            Shoot();
+            ShootManage();
             LastShoot = Time.time;
         }
     }
 
-    private void Shoot()
+    public override void HitManage()
     {
-        Vector3 direction = transform.localScale.x == 1.0f ? Vector2.right : Vector2.left;
-        GameObject bullet = Instantiate(BulletPrefab, transform.position + direction * 0.1f, Quaternion.identity);
-        bullet.GetComponent<BulletScript>().SetDirection(direction);
-    }
-    public void Hit()
-    {
-        if (--Health == 0)
+        base.HitManage();
+        if (Health == 0)
         {
-            Animator.SetBool("isDead", true);
-            Camera.main.GetComponent<AudioSource>().PlayOneShot(DeadSound);
+            EnemiesUI.GetComponent<EnemiesUIScript>().UpdateLeftEnemies();
+            GetComponent<Collider2D>().enabled = false;
+            GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         }
-    }
-
-    public void DestroyGrunt()
-    {
-        Destroy(gameObject);
     }
 }

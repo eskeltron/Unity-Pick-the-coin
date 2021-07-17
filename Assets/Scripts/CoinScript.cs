@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 
 public class CoinScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (collision.name == "John")
+        {
+            CoinManager.Pick(collision.GetComponent<JohnScript>());
+            Destroy(gameObject);
+        }
     }
 }

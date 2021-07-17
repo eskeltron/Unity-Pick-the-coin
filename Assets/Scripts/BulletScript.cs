@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 
 public class BulletScript : MonoBehaviour
@@ -34,15 +33,10 @@ public class BulletScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        JohnMovement john = collider.GetComponent<JohnMovement>();
-        GruntScript grunt = collider.GetComponent<GruntScript>();
-        if (john != null)
+        ISoldier soldier = collider.GetComponent<ISoldier>();
+        if (soldier != null)
         {
-            john.Hit();
-        }
-        if (grunt != null)
-        {
-            grunt.Hit();
+            soldier.HitManage();
         }
         DestroyBullet();
     }
