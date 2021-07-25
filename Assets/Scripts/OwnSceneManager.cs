@@ -14,12 +14,17 @@ namespace Assets.Scripts
             MENU,
             GAME,
             LOSE,
-            WIN
+            WIN,
+            OPTIONS
         }
 
         public static void GoToScene(SCENES scene)
         {
             SceneManager.LoadScene((int)scene);
+        }
+        public static void GoToScene(SCENES scene, LoadSceneParameters parameters)
+        {
+            SceneManager.LoadScene((int)scene, parameters);
         }
     }
 }

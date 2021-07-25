@@ -14,6 +14,10 @@ public class MainMenu : MonoBehaviour
     {
         OwnSceneManager.GoToScene(OwnSceneManager.SCENES.GAME);
     }
+    public void OptionsButton()
+    {
+        OwnSceneManager.GoToScene(OwnSceneManager.SCENES.OPTIONS);
+    }
 
     public void ClickSound()
     {

@@ -4,4 +4,8 @@ using UnityEngine;
 
 public class BackgroundScript : FollowPlayerScript
 {
+    void Update()
+    {
+            
+    }
 }
